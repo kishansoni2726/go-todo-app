@@ -1,0 +1,10 @@
+root = "." #the rroo directory for project
+tmp_dir = "tmp"
+
+[build]
+    bin = "main"
+    cmd = "go build -o {{.Outout}} {{.Input}}"
+    exclude = ["tmp/*", "client/*"]
+    include = ["**/*.go"]
+    ignore = ["tmp/*"]
+
