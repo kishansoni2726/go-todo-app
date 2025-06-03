@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
@@ -18,7 +19,7 @@ type Todo struct {
 	Body      string `json:"body"`
 }
 
-var collections *mongo.Collection
+var collection *mongo.Collection
 
 func main() {
 
@@ -40,19 +41,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	collections = client.Database("go-todo-app").Collection("todos")
+	defer client.Disconnect(context.Background())
+
+	collection = client.Database("go-todo-app").Collection("todos")
 
 	app := fiber.New()
 
 	app.Get("/api/todos", getTodos)
-	app.Post("/api/todos", addTodos)
-	app.Patch("/api/todos:id", updateTodos)
-	app.Delete("/api/todos/:id", delTodos)
+	// app.Post("/api/todos", addTodos)
+	// app.Patch("/api/todos:id", updateTodos)
+	// app.Delete("/api/todos/:id", delTodos)
 
 	port := os.Getenv("PORT")
 
 	if port == "" {
-		port := 5000
+		port = "5000"
 	}
 
 	log.Fatal(app.Listen("0.0.0.0:" + port))
@@ -62,16 +65,37 @@ func main() {
 
 func getTodos(c *fiber.Ctx) error {
 
+	var todos []Todo
+
+	cursor, err := collection.Find(context.Background(), bson.M{})
+
+	if err != nil {
+		return err
+	}
+
+	defer cursor.Close(context.Background())
+
+	for cursor.Next(context.Background()) {
+		var todo Todo
+		if err := cursor.Decode(&todo); err != nil {
+			return err
+		}
+
+		todos = append(todos, todo)
+	}
+
+	return c.JSON(todos)
+
 }
 
-func addTodos(c *fiber.Ctx) error {
+// func addTodos(c *fiber.Ctx) error {
 
-}
+// }
 
-func updateTodos(c *fiber.Ctx) error {
+// func updateTodos(c *fiber.Ctx) error {
 
-}
+// }
 
-func delTodos(c *fiber.Ctx) error {
+// func delTodos(c *fiber.Ctx) error {
 
-}
+// }
