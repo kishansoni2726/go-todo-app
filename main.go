@@ -14,9 +14,9 @@ import (
 )
 
 type Todo struct {
-	ID        int    `json:"id" bson:"_id"`
-	Completed bool   `json:"completed"`
-	Body      string `json:"body"`
+	ID        bson.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Completed bool          `json:"completed,omitempty"`
+	Body      string        `json:"body"`
 }
 
 var collection *mongo.Collection
@@ -41,14 +41,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	defer client.Disconnect(context.Background())
-
 	collection = client.Database("go-todo-app").Collection("todos")
 
 	app := fiber.New()
 
 	app.Get("/api/todos", getTodos)
-	// app.Post("/api/todos", addTodos)
+	app.Post("/api/todos", addTodos)
 	// app.Patch("/api/todos:id", updateTodos)
 	// app.Delete("/api/todos/:id", delTodos)
 
@@ -73,8 +71,6 @@ func getTodos(c *fiber.Ctx) error {
 		return err
 	}
 
-	defer cursor.Close(context.Background())
-
 	for cursor.Next(context.Background()) {
 		var todo Todo
 		if err := cursor.Decode(&todo); err != nil {
@@ -88,9 +84,28 @@ func getTodos(c *fiber.Ctx) error {
 
 }
 
-// func addTodos(c *fiber.Ctx) error {
+func addTodos(c *fiber.Ctx) error {
 
-// }
+	todo := new(Todo)
+
+	if err := c.BodyParser(todo); err != nil {
+		return err
+	}
+
+	if todo.Body == "" {
+		return c.Status(400).JSON(fiber.Map{"Error": "Todo body cannot be empty"})
+	}
+
+	insertResult, err := collection.InsertOne(context.Background(), todo)
+
+	if err != nil {
+		return err
+	}
+
+	todo.ID = insertResult.InsertedID.(bson.ObjectID)
+	return c.Status(201).JSON(todo)
+
+}
 
 // func updateTodos(c *fiber.Ctx) error {
 
