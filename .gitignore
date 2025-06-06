@@ -31,3 +31,56 @@ vendor/
 # Dependency directories (remove the comment below if you are using dep)
 
 tmp/
+
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# production build
+/build
+/dist
+
+# misc
+.DS_Store
+.env
+.env.*.local
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+
+# testing
+/coverage
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# logs
+logs
+*.log
+
+# Optional: if using Mac or Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Optional: Chakra UI custom fonts or theme assets (you might keep if committing them)
+/public/assets/fonts/*
+!public/assets/fonts/.gitkeep
+
+# Optional: if you're using GitHub Codespaces or VS Online
+/.devcontainer
+
+# React-specific
+*.tsbuildinfo
+.cache/

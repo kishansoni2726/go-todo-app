@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -14,7 +15,7 @@ import (
 )
 
 type Todo struct {
-	ID        bson.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	ID        bson.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	Completed bool          `json:"completed"`
 	Body      string        `json:"body"`
 }
@@ -49,6 +50,11 @@ func main() {
 	collection = client.Database("go-todo-app").Collection("todos")
 
 	app := fiber.New()
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:5173",
+		AllowHeaders: "Origin,Content-Type,Accept",
+	}))
 
 	app.Get("/api/todos", getTodos)
 	app.Post("/api/todos", addTodos)
@@ -148,7 +154,7 @@ func delTodos(c *fiber.Ctx) error {
 
 	filter := bson.M{"_id": objectID}
 
-	_, err = collection.DeleteOne(context.Background(),filter)
+	_, err = collection.DeleteOne(context.Background(), filter)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to delete todo"})
 	}
