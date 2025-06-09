@@ -6,7 +6,7 @@ COPY go.sum go.mod /opt/todo-app/
 
 RUN go mod download
 
-COPY *.go .env ./
+COPY *.go ./
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o /todo
 
