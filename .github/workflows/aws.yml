@@ -37,8 +37,11 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: production
-
+    env:
+      ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+      IMAGE_TAG: latest
+      
     steps:
 
 
@@ -70,8 +73,8 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY:latest }} .
-        docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY:latest }}
-        echo "image=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY:latest }}" >> $GITHUB_OUTPUT
+        docker build -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY:latest .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
 
 
