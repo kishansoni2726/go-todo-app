@@ -40,6 +40,7 @@ jobs:
     env:
       ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
       IMAGE_TAG: latest
       
     steps:
