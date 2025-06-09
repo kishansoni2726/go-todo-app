@@ -1,0 +1,5 @@
+client
+*.log
+node_modules
+Dockerfile
+.dockerignore
