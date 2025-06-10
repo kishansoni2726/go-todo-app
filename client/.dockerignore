@@ -1,5 +1,32 @@
-*.log
-*.env
+# Dependencies
 node_modules
-Dockerfile
-.dockerignore
+npm-debug.log*
+
+# Build output
+dist
+build
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Version control
+.git
+.gitignore
+
+# IDE files
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage
+
+# Logs
+*.log
