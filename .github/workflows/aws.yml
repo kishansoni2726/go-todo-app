@@ -40,11 +40,11 @@ jobs:
     env:
       ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+      ECR_REPOSITORY_UI: ${{ secrets.ECR_REPOSITORY_UI }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       IMAGE_TAG: latest
       
     steps:
-
 
     - name: Create .env file from secrets
       run: |
@@ -77,5 +77,19 @@ jobs:
         docker build -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-ui-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        cd client
+        docker build -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY_UI:latest
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_UI:latest" >> $GITHUB_OUTPUT
 
 
