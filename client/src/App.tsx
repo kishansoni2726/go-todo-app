@@ -5,25 +5,19 @@ import TodoForm from './components/TodoForm'
 import TodoList from './components/TodoList'
 import React from 'react';
 
-export const BASE_URL = "http://localhost:5000/api" ;
-function App() {
+export const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-  return(
+function App() {
+  return (
     <Stack h="100vh">
-      <NavBar></NavBar>
+      <NavBar />
 
       <Container>
-
-        <TodoForm>
-        </TodoForm>
-
-        <TodoList>
-        </TodoList>
-        
+        <TodoForm />
+        <TodoList />
       </Container>
     </Stack>
   );
-  
 }
 
 export default App;

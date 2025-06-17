@@ -10,6 +10,13 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY *.go ./
+
+ARG PORT
+ARG MONGO_URI
+
+ENV PORT=$PORT
+ENV MONGO_URI=$MONGO_URI
+
 RUN CGO_ENABLED=0 GOOS=linux go build -o todo
 
 # --- Stage 2: Runtime ---

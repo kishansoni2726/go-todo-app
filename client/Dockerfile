@@ -1,12 +1,16 @@
 
 # Multi-stage build for optimized React app
-FROM node:18-alpine AS builder
+FROM node:24-alpine AS builder
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
+
+ARG URI
+
+ENV URI=$URI
 
 # Install all dependencies (needed for build)
 RUN npm install

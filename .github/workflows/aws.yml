@@ -74,7 +74,14 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build  --env-file .env -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        set -a
+        source .env
+        set +a
+        
+        docker build \
+          --build-arg PORT=$PORT \
+          --build-arg MONGO_URI=$MONGO_URI \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
 
