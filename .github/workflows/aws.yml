@@ -62,6 +62,7 @@ jobs:
       run: |
           echo "PORT=${{ secrets.PORT }}" >> .env
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+          ls -la 
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
