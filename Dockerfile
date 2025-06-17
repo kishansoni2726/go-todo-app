@@ -29,6 +29,7 @@ WORKDIR /home/appuser
 
 # Copy the compiled Go binary
 COPY --from=builder /opt/todo-app/todo .
+COPY --from=builder /opt/todo-app/.env 
 
 # Use the non-root user
 USER appuser
