@@ -73,13 +73,13 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        set -a
-        source .env
-        set +a
+        # set -a
+        # source .env
+        # set +a
 
         docker build \
-          --build-arg PORT=$PORT \
-          --build-arg MONGO_URI=$MONGO_URI \
+          # --build-arg PORT=$PORT \
+          # --build-arg MONGO_URI=$MONGO_URI \
           -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
@@ -94,7 +94,7 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
         cd client
-        docker build -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest .
+        docker build -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_UI:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_UI:latest" >> $GITHUB_OUTPUT
 
