@@ -10,6 +10,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY *.go ./
+COPY .env ./ 
 
 ARG PORT
 ARG MONGO_URI
