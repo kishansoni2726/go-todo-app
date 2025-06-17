@@ -62,7 +62,7 @@ jobs:
       run: |
           echo "PORT=${{ secrets.PORT }}" >> .env
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
-          ls -la 
+          ls -R
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
@@ -76,8 +76,6 @@ jobs:
         set -a
         source .env
         set +a
-
-        ls -R
 
         docker build \
           --build-arg PORT=$PORT \
