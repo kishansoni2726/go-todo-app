@@ -1,3 +1,4 @@
+
 # This workflow will build and push a new container image to Amazon ECR,
 # and then will deploy a new task definition to Amazon ECS, when there is a push to the "main" branch.
 #
@@ -46,6 +47,14 @@ jobs:
       
     steps:
 
+    - name: Create .env file from secrets
+      run: |
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+    
+    - name: Checkout
+      uses: actions/checkout@v4
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -57,14 +66,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    
-    - name: Create .env file from secrets
-      run: |
-          echo "PORT=${{ secrets.PORT }}" >> .env
-          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
-          ls -R
-
-    - name: Build, tag, and push image to Amazon ECR
+    - name: Build, tag, and push image Backend to Amazon ECR
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -73,15 +75,22 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        # set -a
-        # source .env
-        # set +a
 
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        
+        # docker build -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY:latest .
+        set -a
+        source .env
+        set +a
+        docker build \
+          --build-arg PORT=$PORT \
+          --build-arg MONGO_URI=$MONGO_URI \
+          -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
-
-    - name: Build, tag, and push image to Amazon ECR
+    
+    
+    
+    - name: Build, tag, and push UI image to Amazon ECR
       id: build-ui-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -90,8 +99,7 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build -f client/Dockerfile -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest
+        cd client
+        docker build -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_UI:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_UI:latest" >> $GITHUB_OUTPUT
-
-
