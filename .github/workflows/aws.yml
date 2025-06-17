@@ -49,8 +49,7 @@ jobs:
 
     - name: Create .env file from secrets
       run: |
-          echo "PORT=${{ secrets.PORT }}" >> .env
-          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+
     
     - name: Checkout
       uses: actions/checkout@v4
@@ -78,9 +77,14 @@ jobs:
 
         
         # docker build -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY:latest .
+        
+        echo "PORT=${{ secrets.PORT }}" >> .env
+        echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+        
         set -a
         source .env
         set +a
+        
         docker build \
           --build-arg PORT=$PORT \
           --build-arg MONGO_URI=$MONGO_URI \
