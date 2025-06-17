@@ -77,7 +77,7 @@ jobs:
         source .env
         set +a
 
-        ls -la
+        ls -R
 
         docker build \
           --build-arg PORT=$PORT \
