@@ -76,7 +76,9 @@ jobs:
         set -a
         source .env
         set +a
-        
+
+        ls -la
+
         docker build \
           --build-arg PORT=$PORT \
           --build-arg MONGO_URI=$MONGO_URI \
