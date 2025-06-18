@@ -77,8 +77,9 @@ jobs:
         source .env
         set +a
 
-        ls
-        
+
+        echo "Current directory: $(pwd)"
+        ls -l
         docker build \
           --build-arg PORT=$PORT \
           --build-arg MONGO_URI=$MONGO_URI \
