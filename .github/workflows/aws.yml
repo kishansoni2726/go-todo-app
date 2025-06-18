@@ -76,6 +76,8 @@ jobs:
         set -a
         source .env
         set +a
+
+        ls
         
         docker build \
           --build-arg PORT=$PORT \
@@ -97,6 +99,7 @@ jobs:
         # be deployed to ECS.
         
         cd client
+        ls
         echo "URI=${{ secrets.URI }}" >> .env
         
         set -a
