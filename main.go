@@ -52,7 +52,7 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://todo-service.default.svc.cluster.local/api",
+		AllowOrigins: "http://todo-backend-service.default.svc.cluster.local/api",
 		AllowHeaders: "Origin,Content-Type,Accept",
 	}))
 
