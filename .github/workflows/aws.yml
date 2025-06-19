@@ -100,14 +100,12 @@ jobs:
         # be deployed to ECS.
         
         cd client
-        echo "URI=${{ secrets.URI }}" >> .env.production
+        echo "VITE_API_URL=${{ secrets.URI }}" >> .env.production
 
         set -a
         source .env.production
         set +a
-
-        echo $URI
         
-        docker build --build-arg URI=$URI -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest .
+        docker build --build-arg URI=$VITE_API_URL -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_UI:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_UI:latest" >> $GITHUB_OUTPUT
