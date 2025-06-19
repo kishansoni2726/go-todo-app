@@ -106,6 +106,6 @@ jobs:
         source .env.production
         set +a
         
-        docker build --build-arg URI="http://todo-backend-service.default.svc.cluster.local/api"" -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest .
+        docker build --build-arg URI="http://todo-backend-service.default.svc.cluster.local/api" -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_UI:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_UI:latest" >> $GITHUB_OUTPUT
