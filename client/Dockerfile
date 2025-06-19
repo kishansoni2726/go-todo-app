@@ -8,15 +8,17 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-ARG URI
 
-ENV URI=$URI
 
 # Install all dependencies (needed for build)
 RUN npm install
 
 # Copy source code
 COPY . .
+
+RUN echo "VITE_API_URL=$VITE_API_URL" > .env.production
+
+
 
 # Build the React app
 RUN npm run build
