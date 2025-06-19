@@ -1,42 +1,39 @@
-# --- Stage 1: Build React App ---
-FROM node:24-alpine AS builder
+FROM node:24-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json and package-lock.json for better caching
 COPY package*.json ./
 
-ARG VITE_API_URL
-
-ENV VITE_API_URL=$VITE_API_URL
-
-RUN echo "VITE_API_URL=$VITE_API_URL" > .env.production
-
-
-# Install dependencies
-RUN npm install
+# Install dependencies (including dev dependencies for build)
+RUN npm ci --silent
 
 # Copy source code
 COPY . .
 
+# Set build-time environment variables
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 # Build the production-ready static site
 RUN npm run build
 
-# --- Stage 2: Serve with NGINX ---
-FROM nginx:alpine
+# Install a simple static file server
+RUN npm install -g serve
 
-# Remove default config if not needed
-RUN rm -f /etc/nginx/conf.d/default.conf
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001
 
-# Optional: Add custom nginx.conf (if you have one)
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Change ownership of the app directory
+RUN chown -R nextjs:nodejs /app
 
-# Copy built app from previous stage
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Switch to non-root user
+USER nextjs
 
 # Expose port
-EXPOSE 80
+EXPOSE 3000
 
-# Start NGINX
-CMD ["nginx", "-g", "daemon off;"]
+# Serve the built application
+CMD ["serve", "-s", "dist", "-l", "3000"]
