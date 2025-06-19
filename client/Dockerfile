@@ -7,12 +7,12 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Inject API URL from build arg into Vite environment
 ARG VITE_API_URL
+
 ENV VITE_API_URL=$VITE_API_URL
 
-# Create .env.production for Vite to read
 RUN echo "VITE_API_URL=$VITE_API_URL" > .env.production
+
 
 # Install dependencies
 RUN npm install
