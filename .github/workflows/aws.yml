@@ -80,9 +80,6 @@ jobs:
         source .env
         set +a
 
-
-        echo "Current directory: $(pwd)"
-        ls -l
         docker build \
           --build-arg PORT=$PORT \
           --build-arg MONGO_URI=$MONGO_URI \
@@ -103,11 +100,10 @@ jobs:
         # be deployed to ECS.
         
         cd client
-        ls
-        echo "URI=${{ secrets.URI }}" >> .env
-        
+        echo "URI=${{ secrets.URI }}" >> .env.production
+
         set -a
-        source .env
+        source .env.production
         set +a
         
         docker build --build-arg URI=$URI -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest .
