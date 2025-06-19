@@ -105,6 +105,8 @@ jobs:
         set -a
         source .env.production
         set +a
+
+        echo $URI
         
         docker build --build-arg URI=$URI -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_UI:latest
