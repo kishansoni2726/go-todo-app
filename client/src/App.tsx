@@ -5,9 +5,7 @@ import TodoForm from './components/TodoForm'
 import TodoList from './components/TodoList'
 import React from 'react';
 
-export const BASE_URL = "http://todo-backend-service.default.svc.cluster.local/api";
-
-
+export const BASE_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   return (
