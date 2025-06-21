@@ -56,7 +56,7 @@ func main() {
 		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
 		AllowHeaders:     "Origin, Content-Type, Accept",
 		ExposeHeaders:    "Content-Length",
-		AllowCredentials: true,
+		AllowCredentials: false, // ✅ No more panic
 	}))
 
 	app.Get("/api/todos", getTodos)
