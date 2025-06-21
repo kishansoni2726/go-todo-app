@@ -52,8 +52,11 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
-		AllowHeaders: "Origin,Content-Type,Accept",
+		AllowOrigins:     "*",
+		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders:     "Origin, Content-Type, Accept",
+		ExposeHeaders:    "Content-Length",
+		AllowCredentials: true,
 	}))
 
 	app.Get("/api/todos", getTodos)
