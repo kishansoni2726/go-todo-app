@@ -10,10 +10,6 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Set build-time environment variable
-ARG VITE_API_URL
-ENV VITE_API_URL=$VITE_API_URL
-
 # Build static site
 RUN npm run build
 
