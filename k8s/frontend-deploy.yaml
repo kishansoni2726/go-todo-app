@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: todo-ui
+  name: todo-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: todo-ui
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: todo-ui
+    spec:
+      imagePullSecrets:
+        - name: ecr-registry-secret
+      containers:
+      - image: todo-ui:latest
+        name: todo-ui
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        resources: {}
+status: {}
