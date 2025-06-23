@@ -102,6 +102,6 @@ jobs:
         # be deployed to ECS.
         
         cd client
-        docker build-t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest:latest .
+        docker build -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_UI:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_UI:latest" >> $GITHUB_OUTPUT
