@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -51,13 +52,25 @@ func main() {
 
 	app := fiber.New()
 
+	// CORS: Allow only frontend NodePort IP or domain
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
 		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
-		AllowHeaders:     "Origin, Content-Type, Accept",
+		AllowHeaders:     "Origin, Content-Type, Accept, X-Frontend-Auth",
 		ExposeHeaders:    "Content-Length",
-		AllowCredentials: false, // ✅ No more panic
+		AllowCredentials: false,
 	}))
+
+	// Custom middleware: Only allow requests from frontend pod with header
+	app.Use(func(c *fiber.Ctx) error {
+		if strings.HasPrefix(c.Path(), "/api") {
+			authHeader := c.Get("X-Frontend-Auth")
+			if authHeader != "trusted" {
+				return c.Status(fiber.StatusForbidden).SendString("Access Denied")
+			}
+		}
+		return c.Next()
+	})
 
 	app.Get("/api/todos", getTodos)
 	app.Post("/api/todos", addTodos)

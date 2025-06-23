@@ -25,6 +25,8 @@
 #    See the documentation for each action used below for the recommended IAM policies for this IAM user,
 #    and best practices on handling the access key credentials.
 
+
+
 name: Deploy to Amazon ECS
 
 on:
@@ -100,11 +102,6 @@ jobs:
         # be deployed to ECS.
         
         cd client
-
-        
-
-        docker build -t 254774371055.dkr.ecr.us-east-1.amazonaws.com/todo-ui:latest .
-
-        # docker build --build-arg URI="http://todo-backend-service" -t ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY_UI:latest .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_UI:latest:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_UI:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_UI:latest" >> $GITHUB_OUTPUT
