@@ -13,16 +13,28 @@ COPY . .
 # Build static site
 RUN npm run build
 
-# Stage 2: Serve with NGINX
-FROM nginx:alpine
+# Stage 2: Production-ready serve
+FROM node:24-alpine
 
-# Copy custom nginx config
-COPY default.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# Copy build output to NGINX's public directory
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Install serve globally
+RUN npm install -g serve
 
-# Expose HTTP port
-EXPOSE 80
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && adduser -S appuser -u 1001 -G nodejs
 
-CMD ["nginx", "-g", "daemon off;"]
+# Copy build output
+COPY --from=builder /app/dist ./dist
+
+# Set ownership
+RUN chown -R appuser:nodejs /app
+
+# Switch to non-root user
+USER appuser
+
+# Expose port 3000
+EXPOSE 3000
+
+# Production serve with optimizations
+CMD ["serve", "-s", "dist", "-p", "3000", "--single"]
